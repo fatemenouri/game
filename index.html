@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Start</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style >
+        body{
+            overflow: hidden;
+            background-image: url("textures/surface.png");
+        }
+        #div1{
+            margin: 15px;
+            margin-top: 155px;
+            width: 500px;
+            height: 400px;
+            text-align: center;
+            line-height: 35px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 20px;
+            opacity: 0.7;
+            background-color: #c2a3c2;
+            color: aliceblue;
+            margin-left: 400px;
+            padding: 15px;
+        }
+        #panel{
+            display: none;
+
+        }
+        #flip:hover,#p:hover,a{
+            color: rgb(207, 223, 236);
+            cursor: pointer;
+        }
+        a:hover{
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div id="div1">
+    <p>MEMORY GAME</p>
+    <p>Match The Cards</p>
+    <hr>
+    <div id="flip">Select the level</div>
+    <div id="panel">
+        <p id="p"><a href="medium.html">Medium</a></p>
+        <p id="p"><a href="hard.html">Hard</a></p>
+    </div>
+</div>
+<script>
+    $("#flip").click(function(){
+        $("#panel").slideDown(2000);
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>hard</title>
+
+    <style>
+        body {
+            overflow: hidden;
+        }
+
+        .btn {
+            font-family: 'Press Start 2P', cursive;
+            width: 1500px;
+            background-color: rgb(0, 0, 0);
+            text-align: center;
+            overflow: hidden;
+            font-size: 20px;
+            color: rgb(230, 255, 255);
+            padding-top: 20px;
+            padding-right: 100px;
+        }
+
+        .btn:hover {
+            color: rgb(224, 209, 209);
+        }
+    </style>
+
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="three.js"></script>
+    <script type="text/javascript" src="Tween.js"></script>
+    <script type="text/javascript" src="dat.gui.min.js"></script>
+    <script type="text/javascript" src="textureloader.js"></script>
+    <script type="text/javascript" src="threex.domevents.js"></script>
+    <script src="EventsControls.js"></script>
+
+</head>
+
+<body>
+
+<span id="move" style=" margin-left:380px; font-family: 'Press Start 2P', cursive;  font-size: 20px; color: rgb(0,0,0)"></span>
+<span id="time" style=" margin-left:380px; font-family: 'Press Start 2P', cursive;  font-size: 20px; color: rgb(0,0,0)"></span>
+<span id="mach" style=" margin-left:380px; font-family: 'Press Start 2P', cursive;  font-size: 20px; color: rgb(0,0,0)"></span>
+<div class="container">
+    <!--webGL-->
+    <div id="web-gl">
+
+    </div>
+</div>
+
+<script id="scriptScene0" type="text/javascript">
+    var scene, camera, renderer;
+    var plane1, plane2, plane3, plane4, plane5, plane6, plane7, plane8;
+    var plane9,plane10,plane11,plane12,plane13,plane14,plane15,plane16;
+    var texture0, texture1, texture2, texture3, texture4,texture5,texture6,texture7,texture8;
+    var surfaceTex;
+    var a , b ;
+    var c1= false;
+    var c2= false;
+    var c3=false;
+    var c4=false;
+    var c5=false;
+    var c6=false;
+    var c7=false;
+    var c8=false;
+    var d1=false;
+    var d2=false;
+    var d3=false;
+    var d4=false;
+    var d5=false;
+    var d6=false;
+    var d7=false;
+    var d8=false;
+    var c9= false;
+    var c10= false;
+    var c11=false;
+    var c12=false;
+    var c13=false;
+    var c14=false;
+    var c15=false;
+    var c16=false;
+    var d9=false;
+    var d10=false;
+    var d11=false;
+    var d12=false;
+    var d13=false;
+    var d14=false;
+    var d15=false;
+    var d16=false;
+    var q=true;
+    var fg=false;
+    var i;
+    var j = 1;
+    var plane;
+    var planes;
+    var tex = [];
+    var flag = 0;
+    var check1;
+    var check2;
+    var r1;
+    var r=[];
+    var doRotate= false;
+    var move=0;
+    var mach=0;
+    var sound,sound2,sound3,sound4;
+    var audioLoader;
+    //  Interaction Variables
+    var rayCaster = new THREE.Raycaster();
+    var mouse = new THREE.Vector2(), SELECTED1, SELECTED2; // Vector2 is a class that has 2 properties(vectors): x,y.
+    var container, currentColor, controls;
+
+    window.addEventListener('resize', onWindowResize, false);
+
+    texture0 = new THREE.TextureLoader().load('textures/texture0.png');
+    texture1 = new THREE.TextureLoader().load('textures/texture1.png');
+    texture2 = new THREE.TextureLoader().load('textures/texture2.png');
+    texture3 = new THREE.TextureLoader().load('textures/texture3.png');
+    texture4 = new THREE.TextureLoader().load('textures/texture4.png');
+    texture5 = new THREE.TextureLoader().load('textures/texture5.png');
+    texture6 = new THREE.TextureLoader().load('textures/texture6.png');
+    texture7 = new THREE.TextureLoader().load('textures/texture7.png');
+    texture8 = new THREE.TextureLoader().load('textures/texture8.png');
+
+
+    surfaceTex=new THREE.TextureLoader().load('textures/surface.png');
+
+
+    var textures = [
+        {
+            id: 0,
+            tex: texture0
+        },
+        {
+            id: 1,
+            tex: texture1
+        },
+        {
+            id: 2,
+            tex: texture2
+        },
+        {
+            id: 3,
+            tex: texture3
+        },
+        {
+            id: 4,
+            tex: texture4
+        }
+
+    ];
+    init();
+    animate();
+
+    function init() {
+
+        scene = new THREE.Scene();
+
+
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 150;
+        camera.lookAt(scene.position);
+
+        //  create a render and set the size
+        // renderer = new THREE.WebGLRenderer({ antialias: true });
+        // renderer.setClearColor(new THREE.Color(0x454890));
+        // renderer.setSize(window.innerWidth, window.innerHeight);
+
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setClearColor(new THREE.Color(0xe0d1e0));
+        renderer.map=surfaceTex;
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+        container = document.getElementById("web-gl");
+        container.appendChild(renderer.domElement);
+
+
+        var ambiColor = "#ffffff";
+        var ambientLight = new THREE.AmbientLight(ambiColor);
+        scene.add(ambientLight);
+        ////////sound
+        var listener = new THREE.AudioListener();
+        scene.add(listener);
+        audioLoader = new THREE.AudioLoader();
+        sound = new THREE.PositionalAudio(listener);
+        audioLoader.load('sound/Mouse-Click-00-c-FesliyanStudios.com.mp3', function (buffer) {
+            sound.setBuffer(buffer);
+            sound.setRefDistance(20);
+            // sound.loop = true;
+
+            // sound.play();
+        });
+        scene.add(sound);
+
+        var listener = new THREE.AudioListener();
+        scene.add(listener);
+        audioLoader = new THREE.AudioLoader();
+        sound2 = new THREE.PositionalAudio(listener);
+        audioLoader.load('mach.wav', function (buffer) {
+            sound2.setBuffer(buffer);
+            sound2.setRefDistance(20);
+            // sound.loop = true;
+
+            // sound.play();
+        });
+        scene.add(sound2);
+
+
+        var listener = new THREE.AudioListener();
+        scene.add(listener);
+        audioLoader = new THREE.AudioLoader();
+        sound3 = new THREE.PositionalAudio(listener);
+        audioLoader.load('unmach.wav', function (buffer) {
+            sound3.setBuffer(buffer);
+            sound3.setRefDistance(20);
+            // sound.loop = true;
+
+            // sound.play();
+        });
+        scene.add(sound3);
+
+        var listener = new THREE.AudioListener();
+        scene.add(listener);
+        audioLoader = new THREE.AudioLoader();
+        sound4 = new THREE.PositionalAudio(listener);
+        audioLoader.load('win.mp3', function (buffer) {
+            sound4.setBuffer(buffer);
+            sound4.setRefDistance(20);
+            // sound.loop = true;
+
+            // sound.play();
+        });
+        scene.add(sound4);
+
+
+        // plane with two sides
+
+        var materials = [new THREE.MeshBasicMaterial({ map: texture1, side: THREE.BackSide }),
+            new THREE.MeshBasicMaterial({ map: texture0 ,side: THREE.FrontSide })];
+        var geometry = new THREE.PlaneGeometry(30, 30);
+        for (var i = 0; i < 2; i++) {
+            var face = geometry.faces[i].clone();
+            face.materialIndex = 1;
+            geometry.faces.push(face);
+            geometry.faceVertexUvs[0].push(geometry.faceVertexUvs[0][i].slice(0));
+        }
+        plane1 = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+        plane1.position.x = -70;
+        plane1.position.y = 80;
+        plane1.type = 1;
+        scene.add(plane1);
+
+        //2
+        var materials = [new THREE.MeshBasicMaterial({ map: texture2, side: THREE.BackSide }),
+            new THREE.MeshBasicMaterial({ map: texture0, side: THREE.FrontSide })];
+        var geometry = new THREE.PlaneGeometry(30, 30);
+        for (var i = 0; i < 2; i++) {
+            var face = geometry.faces[i].clone();
+            face.materialIndex = 1;
+            geometry.faces.push(face);
+            geometry.faceVertexUvs[0].push(geometry.faceVertexUvs[0][i].slice(0));
+        }
+        plane2 = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+        plane2.position.x = -30;
+        plane2.position.y = 80;
+        scene.add(plane2);
+
+
+
+        var materials = [new THREE.MeshBasicMaterial({ map: texture3, side: THREE.BackSide }),
+            new THREE.MeshBasicMaterial({ map: texture0, side: THREE.FrontSide })];
+        var geometry = new THREE.PlaneGeometry(30, 30);
+        for (var i = 0; i < 2; i++) {
+            var face = geometry.faces[i].clone();
+            face.materialIndex = 1;
+            geometry.faces.push(face);
+            geometry.faceVertexUvs[0].push(geometry.faceVertexUvs[0][i].slice(0));
+        }
+        plane3 = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+        plane3.position.x = 10;
+        plane3.position.y = 80;
+        scene.add(plane3);
+
+        //4
+        var materials = [new THREE.MeshBasicMaterial({ map: texture4, side: THREE.BackSide }),
+            new THREE.MeshBasicMaterial({ map: texture0, side: THREE.FrontSide })];
+        var geometry = new THREE.PlaneGeometry(30, 30);
+        for (var i = 0; i < 2; i++) {
+            var face = geometry.faces[i].clone();
+            face.materialIndex = 1;
+            geometry.faces.push(face);
+            geometry.faceVertexUvs[0].push(geometry.faceVertexUvs[0][i].slice(0));
+        }
+        plane4 = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+        plane4.position.x = 50;
+        plane4.position.y = 80;
+        scene.add(plane4);
+        //5
+        var materials = [new THREE.MeshBasicMaterial({ map: texture7, side: THREE.BackSide }),
+            new THREE.MeshBasicMaterial({ map: texture0, side: THREE.FrontSide })];
+        var geometry = new THREE.PlaneGeometry(30, 30);
+        for (var i = 0; i < 2; i++) {
+            var face = geometry.faces[i].clone();
+            face.materialIndex = 1;
+            geometry.faces.push(face);
+            geometry.faceVertexUvs[0].push(geometry.faceVertexUvs[0][i].slice(0));
+        }
+        plane5 = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+        plane5.position.x = -70;
+        plane5.position.y = 40;
+        scene.add(plane5);
+        //6
+        var materials = [new THREE.MeshBasicMaterial({ map: texture6, side: THREE.BackSide }),
+            new THREE.MeshBasicMaterial({ map: texture0, side: THREE.FrontSide })];
+        var geometry = new THREE.PlaneGeometry(30, 30);
+        for (var i = 0; i < 2; i++) {
+            var face = geometry.faces[i].clone();
+            face.materialIndex = 1;
+            geometry.faces.push(face);
+            geometry.faceVertexUvs[0].push(geometry.faceVertexUvs[0][i].slice(0));
+        }
+        plane6 = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+        plane6.position.x = -30;
+        plane6.position.y = 40;
+        scene.add(plane6);
+
+        //7
+
+        var materials = [new THREE.MeshBasicMaterial({ map: texture1, side: THREE.BackSide }),
+            new THREE.MeshBasicMaterial({ map: texture0, side: THREE.FrontSide })];
+        var geometry = new THREE.PlaneGeometry(30, 30);
+        for (var i = 0; i < 2; i++) {
+            var face = geometry.faces[i].clone();
+            face.materialIndex = 1;
+            geometry.faces.push(face);
+            geometry.faceVertexUvs[0].push(geometry.faceVertexUvs[0][i].slice(0));
+        }
+        plane7 = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+        plane7.position.x = 10;
+        plane7.position.y = 40;
+        scene.add(plane7);
+        //8
+        var materials = [new THREE.MeshBasicMaterial({ map: texture4, side: THREE.BackSide }),
+            new THREE.MeshBasicMaterial({ map: texture0, side: THREE.FrontSide })];
+        var geometry = new THREE.PlaneGeometry(30, 30);
+        for (var i = 0; i < 2; i++) {
+            var face = geometry.faces[i].clone();
+            face.materialIndex = 1;
+            geometry.faces.push(face);
+            geometry.faceVertexUvs[0].push(geometry.faceVertexUvs[0][i].slice(0));
+        }
+        plane8 = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+        plane8.position.x = 50;
+        plane8.position.y = 40;
+        scene.add(plane8);
+
+        //////////////////////////////////////////////////////////////////////////////////
+        //9
+
+        var materials = [new THREE.MeshBasicMaterial({ map: texture3, side: THREE.BackSide }),
+            new THREE.MeshBasicMaterial({ map: texture0, side: THREE.FrontSide })];
+        var geometry = new THREE.PlaneGeometry(30, 30);
+        for (var i = 0; i < 2; i++) {
+            var face = geometry.faces[i].clone();
+            face.materialIndex = 1;
+            geometry.faces.push(face);
+            geometry.faceVertexUvs[0].push(geometry.faceVertexUvs[0][i].slice(0));
+        }
+        plane9 = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+        plane9.position.x = -70;
+        plane9.position.y = -40;
+        scene.add(plane9);
+
+        //10
+
+        var materials = [new THREE.MeshBasicMaterial({ map: texture5, side: THREE.BackSide }),
+            new THREE.MeshBasicMaterial({ map: texture0, side: THREE.FrontSide })];
+        var geometry = new THREE.PlaneGeometry(30, 30);
+        for (var i = 0; i < 2; i++) {
+            var face = geometry.faces[i].clone();
+            face.materialIndex = 1;
+            geometry.faces.push(face);
+            geometry.faceVertexUvs[0].push(geometry.faceVertexUvs[0][i].slice(0));
+        }
+        plane10 = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+        plane10.position.x = -30;
+        plane10.position.y = -40;
+        scene.add(plane10);
+        //11
+
+        var materials = [new THREE.MeshBasicMaterial({ map: texture2, side: THREE.BackSide }),
+            new THREE.MeshBasicMaterial({ map: texture0, side: THREE.FrontSide })];
+        var geometry = new THREE.PlaneGeometry(30, 30);
+        for (var i = 0; i < 2; i++) {
+            var face = geometry.faces[i].clone();
+            face.materialIndex = 1;
+            geometry.faces.push(face);
+            geometry.faceVertexUvs[0].push(geometry.faceVertexUvs[0][i].slice(0));
+        }
+        plane11 = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+        plane11.position.x = 10;
+        plane11.position.y = -40;
+        scene.add(plane11);
+
+        //12
+        var materials = [new THREE.MeshBasicMaterial({ map: texture5, side: THREE.BackSide }),
+            new THREE.MeshBasicMaterial({ map: texture0, side: THREE.FrontSide })];
+        var geometry = new THREE.PlaneGeometry(30, 30);
+        for (var i = 0; i < 2; i++) {
+            var face = geometry.faces[i].clone();
+            face.materialIndex = 1;
+            geometry.faces.push(face);
+            geometry.faceVertexUvs[0].push(geometry.faceVertexUvs[0][i].slice(0));
+        }
+        plane12 = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+        plane12.position.x = 50;
+        plane12.position.y = -40;
+        scene.add(plane12);
+        //13
+        var materials = [new THREE.MeshBasicMaterial({ map: texture8, side: THREE.BackSide }),
+            new THREE.MeshBasicMaterial({ map: texture0, side: THREE.FrontSide })];
+        var geometry = new THREE.PlaneGeometry(30, 30);
+        for (var i = 0; i < 2; i++) {
+            var face = geometry.faces[i].clone();
+            face.materialIndex = 1;
+            geometry.faces.push(face);
+            geometry.faceVertexUvs[0].push(geometry.faceVertexUvs[0][i].slice(0));
+        }
+        plane13 = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+        plane13.position.x = -70;
+        plane13.position.y = 0;
+        scene.add(plane13);
+        //14
+        var materials = [new THREE.MeshBasicMaterial({ map: texture8, side: THREE.BackSide }),
+            new THREE.MeshBasicMaterial({ map: texture0, side: THREE.FrontSide })];
+        var geometry = new THREE.PlaneGeometry(30, 30);
+        for (var i = 0; i < 2; i++) {
+            var face = geometry.faces[i].clone();
+            face.materialIndex = 1;
+            geometry.faces.push(face);
+            geometry.faceVertexUvs[0].push(geometry.faceVertexUvs[0][i].slice(0));
+        }
+        plane14 = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+        plane14.position.x = -30;
+        plane14.position.y = 0;
+        scene.add(plane14);
+
+        //15
+
+        var materials = [new THREE.MeshBasicMaterial({ map: texture6, side: THREE.BackSide }),
+            new THREE.MeshBasicMaterial({ map: texture0, side: THREE.FrontSide })];
+        var geometry = new THREE.PlaneGeometry(30, 30);
+        for (var i = 0; i < 2; i++) {
+            var face = geometry.faces[i].clone();
+            face.materialIndex = 1;
+            geometry.faces.push(face);
+            geometry.faceVertexUvs[0].push(geometry.faceVertexUvs[0][i].slice(0));
+        }
+        plane15 = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+        plane15.position.x = 10;
+        plane15.position.y = 0;
+        scene.add(plane15);
+        //16
+        var materials = [new THREE.MeshBasicMaterial({ map: texture7, side: THREE.BackSide }),
+            new THREE.MeshBasicMaterial({ map: texture0, side: THREE.FrontSide })];
+        var geometry = new THREE.PlaneGeometry(30, 30);
+        for (var i = 0; i < 2; i++) {
+            var face = geometry.faces[i].clone();
+            face.materialIndex = 1;
+            geometry.faces.push(face);
+            geometry.faceVertexUvs[0].push(geometry.faceVertexUvs[0][i].slice(0));
+        }
+        plane16 = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+        plane16.position.x = 50;
+        plane16.position.y = 0;
+        scene.add(plane16);
+
+        renderer.domElement.addEventListener('mousedown', onDocumentMouseDown, false);
+
+
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+
+        //  render the scene
+        renderer.render(scene, camera);
+        document.getElementById('move').innerHTML = "move:" + move;
+
+        // if(move===0){
+        //     alert("You lose");
+        //     doRotate=false;
+        // }
+        //  if(mach===104){
+        //     alert("You win");
+        //     doRotate=false;
+        //  }
+
+        if(doRotate){
+            c1= false;c2= false;c3=false;c4=false;c5=false; c6=false;c7=false; c8=false;
+            d1=false;d2=false;d3=false;d4=false;d5=false;d6=false;d7=false;d8=false;
+            c19= false;c10= false;c11=false;c12=false;c13=false; c14=false;c15=false; c16=false;
+            d9=false;d10=false;d11=false;d12=false;d13=false;d14=false;d15=false;d16=false;
+            if(check1 === plane1.material[0].id){
+                a = plane1.material[0].map.id;
+                c1 = true;
+            }
+            else if(check1 === plane2.material[0].id){
+                a = plane2.material[0].map.id;
+                c2 = true;
+            }
+            else if(check1 === plane3.material[0].id){
+                a = plane3.material[0].map.id;
+                c3 = true;
+            }
+            else if(check1 === plane4.material[0].id){
+                a = plane4.material[0].map.id;
+                c4 = true;
+            }
+            else if(check1 === plane5.material[0].id){
+                a = plane5.material[0].map.id;
+                c5 = true;
+            }
+            else if(check1 === plane6.material[0].id){
+                a = plane6.material[0].map.id;
+                c6 = true;
+            }
+            else if(check1 === plane7.material[0].id){
+                a = plane7.material[0].map.id;
+                c7 = true;
+            }
+            else if(check1 === plane8.material[0].id){
+                a = plane8.material[0].map.id;
+                c8 = true;
+            }
+
+            else if(check1 === plane9.material[0].id){
+                a = plane9.material[0].map.id;
+                c9 = true;
+            }
+            else if(check1 === plane10.material[0].id){
+                a = plane10.material[0].map.id;
+                c10 = true;
+            }
+            else if(check1 === plane11.material[0].id){
+                a = plane11.material[0].map.id;
+                c11 = true;
+            }
+            else if(check1 === plane12.material[0].id){
+                a = plane12.material[0].map.id;
+                c12 = true;
+            }
+            else if(check1 === plane13.material[0].id){
+                a = plane13.material[0].map.id;
+                c13 = true;
+            }
+            else if(check1 === plane14.material[0].id){
+                a = plane14.material[0].map.id;
+                c14 = true;
+            }
+            else if(check1 === plane15.material[0].id){
+                a = plane15.material[0].map.id;
+                c15 = true;
+            }
+            else if(check1 === plane16.material[0].id){
+                a = plane8.material[0].map.id;
+                c16 = true;
+            }
+
+
+            if(check2 === plane1.material[0].id){
+                b = plane1.material[0].map.id;
+                d1 =true;
+            }
+            else if(check2 === plane2.material[0].id){
+                b = plane2.material[0].map.id;
+                d2 =true;
+            }
+            else if(check2 === plane3.material[0].id){
+                b = plane3.material[0].map.id;
+                d3 =true;
+            }
+            else if(check2 === plane4.material[0].id){
+                b = plane4.material[0].map.id;
+                d4 =true;
+            }
+            else if(check2 === plane5.material[0].id){
+                b = plane5.material[0].map.id;
+                d5 =true;
+            }
+            else if(check2 === plane6.material[0].id){
+                b = plane6.material[0].map.id;
+                d6 =true;
+            }
+            else if(check2 === plane7.material[0].id){
+                b = plane7.material[0].map.id;
+                d7 =true;
+            }
+            else if(check2 === plane8.material[0].id){
+                b = plane8.material[0].map.id;
+                d8 =true;
+            }
+            else if(check2 === plane9.material[0].id){
+                b = plane9.material[0].map.id;
+                d9 =true;
+            }
+            else if(check2 === plane10.material[0].id){
+                b = plane10.material[0].map.id;
+                d10 =true;
+            }
+            else if(check2 === plane11.material[0].id){
+                b = plane11.material[0].map.id;
+                d11 =true;
+            }
+            else if(check2 === plane12.material[0].id){
+                b = plane12.material[0].map.id;
+                d12 =true;
+            }
+            else if(check2 === plane13.material[0].id){
+                b = plane13.material[0].map.id;
+                d13 =true;
+            }
+            else if(check2 === plane14.material[0].id){
+                b = plane14.material[0].map.id;
+                d14 =true;
+            }
+            else if(check2 === plane15.material[0].id){
+                b = plane15.material[0].map.id;
+                d15 =true;
+            }
+            else if(check2 === plane16.material[0].id){
+                b = plane16.material[0].map.id;
+                d16 =true;
+            }
+            if(a === b){
+                setTimeout(function(){
+                    switch (q){
+                        case c1:
+                            scene.remove(plane1);
+                            sound2.play();
+
+                            break;
+                        case c2:
+                            scene.remove(plane2);
+                            sound2.play();
+
+                            break;
+                        case c3:
+                            scene.remove(plane3);
+                            sound2.play();
+
+                            break;
+                        case c4:
+                            scene.remove(plane4);
+                            sound2.play();
+
+                            break;
+                        case c5:
+                            scene.remove(plane5);
+                            sound2.play();
+
+                            break;
+                        case c6:
+                            scene.remove(plane6);
+                            sound2.play();
+
+                            break;
+                        case c7:
+                            scene.remove(plane7);
+                            sound2.play();
+
+                            break;
+                        case c8:
+                            scene.remove(plane8);
+                            sound2.play();
+
+                            break;
+
+                        case c9:
+                            scene.remove(plane9);
+                            sound2.play();
+
+
+                            break;
+                        case c10:
+                            scene.remove(plane10);
+                            sound2.play();
+
+                            break;
+                        case c11:
+                            scene.remove(plane11);
+                            sound2.play();
+
+                            break;
+                        case c12:
+                            scene.remove(plane12);
+                            sound2.play();
+
+                            break;
+                        case c13:
+                            scene.remove(plane13);
+                            sound2.play();
+
+                            break;
+                        case c14:
+                            scene.remove(plane14);
+                            sound2.play();
+
+                            break;
+                        case c15:
+                            scene.remove(plane15);
+                            sound2.play();
+
+                            break;
+                        case c16:
+                            scene.remove(plane16);
+                            sound2.play();
+
+                            break;
+                    }
+                    switch (q){
+                        case d1:
+                            scene.remove(plane1);
+                            sound2.play();
+
+                            break;
+                        case d2:
+                            scene.remove(plane2);
+                            sound2.play();
+
+                            break;
+                        case d3:
+                            scene.remove(plane3);
+                            sound2.play();
+
+                            break;
+                        case d4:
+                            scene.remove(plane4);
+                            sound2.play();
+
+                            break;
+                        case d5:
+                            scene.remove(plane5);
+                            sound2.play();
+
+                            break;
+                        case d6:
+                            scene.remove(plane6);
+                            sound2.play();
+
+                            break;
+                        case d7:
+                            scene.remove(plane7);
+                            sound2.play();
+
+                            break;
+                        case d8:
+                            scene.remove(plane8);
+                            sound2.play();
+
+                            break;
+                        case d9:
+                            scene.remove(plane9);
+                            sound2.play();
+
+                            break;
+                        case d10:
+                            scene.remove(plane10);
+                            sound2.play();
+
+                            break;
+                        case d11:
+                            scene.remove(plane11);
+                            sound2.play();
+
+                            break;
+                        case d12:
+                            scene.remove(plane12);
+                            sound2.play();
+
+                            break;
+                        case d13:
+                            scene.remove(plane13);
+                            sound2.play();
+
+                            break;
+                        case d14:
+                            scene.remove(plane14);
+                            sound2.play();
+
+                            break;
+                        case d15:
+                            scene.remove(plane15);
+                            sound2.play();
+
+                            break;
+                        case d16:
+                            scene.remove(plane16);
+                            sound2.play();
+
+                            break;
+
+                    }
+                    flag = 0;
+                    doRotate= false;
+
+                    mach++;
+
+                },200);
+
+            }
+            else{
+                setTimeout(function(){
+                switch (q){
+                    case c1:
+                        plane1.rotation.y += 3.143;
+                        sound3.play();
+                        break;
+                    case c2:
+                        plane2.rotation.y +=  3.143;
+                        sound3.play();
+                        break;
+                    case c3:
+                        plane3.rotation.y +=  3.143;
+                        sound3.play();
+                        break;
+                    case c4:
+                        plane4.rotation.y +=  3.143;
+                        sound3.play();
+                        break;
+                    case c5:
+                        plane5.rotation.y += 3.143;
+                        sound3.play();
+                        break;
+                    case c6:
+                        plane6.rotation.y +=  3.143;
+                        sound3.play();
+                        break;
+                    case c7:
+                        plane7.rotation.y +=  3.143;
+                        sound3.play();
+                        break;
+                    case c8:
+                        plane8.rotation.y +=  3.143;
+                        sound3.play();
+                        break;
+                    case c9:
+                        plane9.rotation.y += 3.143;
+                        sound3.play();
+                        break;
+                    case c10:
+                        plane10.rotation.y +=  3.143;
+                        sound3.play();
+                        break;
+                    case c11:
+                        plane11.rotation.y +=  3.143;
+                        sound3.play();
+                        break;
+                    case c12:
+                        plane12.rotation.y +=  3.143;
+                        sound3.play();
+                        break;
+                    case c13:
+                        plane13.rotation.y +=  3.143;
+                        sound3.play();
+                        break;
+                    case c14:
+                        plane14.rotation.y +=  3.143;
+                        sound3.play();
+                        break;
+                    case c15:
+                        plane15.rotation.y += 3.143;
+                        sound3.play();
+                        break;
+                    case c16:
+                        plane16.rotation.y +=  3.143;
+                        sound3.play();
+                        break;
+                }
+                switch (q){
+                    case d1:
+                        plane1.rotation.y +=  3.143;
+                        sound3.play();
+                        break;
+                    case d2:
+                        plane2.rotation.y += 3.143;
+                        sound3.play();
+                        break;
+                    case d3:
+                        plane3.rotation.y += 3.143;
+                        sound3.play();
+                        break;
+                    case d4:
+                        plane4.rotation.y += 3.143;
+                        sound3.play();
+                        break;
+                    case d5:
+                        plane5.rotation.y +=  3.143;
+                        sound3.play();
+                        break;
+                    case d6:
+                        plane6.rotation.y +=  3.143;
+                        sound3.play();
+                        break;
+                    case d7:
+                        plane7.rotation.y +=  3.143;
+                        sound3.play();
+                        break;
+                    case d8:
+                        plane8.rotation.y +=  3.143;
+                        sound3.play();
+                        break;
+                    case d9:
+                        plane9.rotation.y += 3.143;
+                        sound3.play();
+                        break;
+                    case d10:
+                        plane10.rotation.y +=  3.143;
+                        sound3.play();
+                        break;
+                    case d11:
+                        plane11.rotation.y +=  3.143;
+                        sound3.play();
+                        break;
+                    case d12:
+                        plane12.rotation.y += 3.143;
+                        sound3.play();
+                        break;
+                    case d13:
+                        plane13.rotation.y +=  3.143;
+                        sound3.play();
+                        break;
+                    case d14:
+                        plane14.rotation.y += 3.143;
+                        sound3.play();
+                        break;
+                    case d15:
+                        plane15.rotation.y += 3.143;
+                        sound3.play();
+                        break;
+                    case d16:
+                        plane16.rotation.y += 3.143;
+                        sound3.play();
+                        break;
+                }
+                flag = 0;
+                doRotate= false;
+                },200);
+            }
+
+        }
+
+
+
+    }
+    function startTimer(duration, display) {
+        var start = Date.now(),
+            diff,
+            minutes,
+            seconds;
+        function timer() {
+            // get the number of seconds that have elapsed since
+            // startTimer() was called
+            diff = duration - (((Date.now() - start) / 1000) | 0);
+
+            // does the same job as parseInt truncates the float
+            minutes = (diff / 60) | 0;
+            seconds = (diff % 60) | 0;
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            display.textContent = minutes + ":" + seconds;
+
+            if (diff <= 0) {
+                // add one second so that the count down starts at the full duration
+                // example 05:00 not 04:59
+                start = Date.now() + 1000;
+            }
+            if(minutes==0 && seconds==0){
+                alert("time out   " +
+                    "you loose");
+                doRotate=false;
+            }
+
+            if(mach===104){
+                alert("you win");
+                sound4.play();
+                doRotate=false;
+            }
+
+        };
+        // we don't want to wait a full second before the timer starts
+        timer();
+        setInterval(timer, 1000);
+
+    }
+    window.onload = function () {
+        var twomin= 60 * 1,
+            display = document.querySelector('#time');
+        startTimer(twomin, display);
+
+    };
+
+    function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function onDocumentMouseDown(event) {
+
+        event.preventDefault();
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        rayCaster.setFromCamera(mouse, camera);
+
+        var intersects = rayCaster.intersectObjects(scene.children);
+        if (flag === 0) {
+            if (intersects.length > 0) {
+                SELECTED = intersects[0].object;
+                SELECTED.rotation.y =Math.PI;
+                check1=SELECTED.material[0].id;
+                sound.play();
+                scene.remove(sound);
+                flag++;
+
+            }
+        }
+        else if (flag === 1) {
+            if (intersects.length > 0) {
+                SELECTED = intersects[0].object;
+                SELECTED.rotation.y =Math.PI;
+                scene.add(sound);
+                check2=SELECTED.material[0].id;
+                sound.play();
+                move++;
+                doRotate = true;
+            }
+        }
+    }
+
+
+
+
+</script>
+</body>
+
+</html>
